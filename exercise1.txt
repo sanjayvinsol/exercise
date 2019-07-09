@@ -8,7 +8,7 @@ Exercise #1  Multibranch Library
 1: SELECT title FROM titles WHERE publisher = 'Macmillan';
 2: SELECT distinct branch from holdings WHERE title IN ( SELECT title FROM titles WHERE author = 'Ann Brown');
 3: SELECT distinct branch from holdings INNER JOIN titles ON holdings.title = titles.title AND author = 'Ann Brown';
-4: SELECT branch,sum(copies) as total_book from holdings GROUP BY branch;
+4: SELECT branch,sum(copies) as total_book FROM holdings GROUP BY branch;
 
 
 
