@@ -1,11 +1,14 @@
 Exercise #1  Sandwich 
 1: SELECT distinct location FROM sandwiches WHERE filling IN ( SELECT filling FROM tastes WHERE name='jones');
-2: SELECT distinct location FROM sandwiches inner join tastes ON sandwiches.filling  = tastes.filling AND tastes.name='jones';
+2: SELECT distinct location FROM sandwiches INNER JOIN tastes ON sandwiches.filling  = tastes.filling AND tastes.name='jones';
 3: SELECT sandwiches.location, count(distinct tastes.name) as total_eater FROM sandwiches, tastes WHERE (sandwiches.filling=tastes.filling) GROUP BY sandwiches.location;
 
 
 Exercise #1  Multibranch Library 
-1: 
-2: 
-3: 
+1: SELECT title FROM titles WHERE publisher = 'Macmillan';
+2: SELECT distinct branch from holdings WHERE title IN ( SELECT title FROM titles WHERE author = 'Ann Brown');
+3: SELECT distinct branch from holdings INNER JOIN titles ON holdings.title = titles.title AND author = 'Ann Brown';
+4: SELECT branch,sum(copies) as total_book from holdings GROUP BY branch;
+
+
 
