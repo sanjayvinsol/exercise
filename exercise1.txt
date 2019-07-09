@@ -1,0 +1,11 @@
+Exercise #1  Sandwich 
+1: SELECT distinct location FROM sandwiches WHERE filling IN ( SELECT filling FROM tastes WHERE name='jones');
+2: SELECT distinct location FROM sandwiches inner join tastes ON sandwiches.filling  = tastes.filling AND tastes.name='jones';
+3: SELECT sandwiches.location, count(distinct tastes.name) as total_eater FROM sandwiches, tastes WHERE (sandwiches.filling=tastes.filling) GROUP BY sandwiches.location;
+
+
+Exercise #1  Multibranch Library 
+1: 
+2: 
+3: 
+

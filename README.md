@@ -1,0 +1,2 @@
+# vintest
+auto deployment testing
