@@ -1,0 +1,5 @@
+Exercise #4 Taking backup of database
+mysqldump -u root -p  restored > exercise3.sql
+
+Exercise #4 Restore DB
+mysql -u root -p  restored < exercise3.sql
