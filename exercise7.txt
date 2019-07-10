@@ -1,0 +1,58 @@
+Exercise 7: Using EXPLAIN to optimize SQL queries
+-------------------------------------------------------------------------------------------------------------------------------------
+Q1: What do different columns in the output of EXPLAIN mean? What possible values can those have? What is the meaning of those values?
+
+  The various columns of EXPLAIN statement are :
+  1. id : The sequential number of the SELECT within the query. (values: 1,2,3,.... OR NULL if result of UNION)
+  2. select_type : The type of SELECT.
+    Values possible :
+      SIMPLE : SELECT not in a subquery, union
+      PRIMARY : outermost SELECT
+      UNION : Statement in a UNION
+      DEPENDENT UNION : Statement in a UNION dependent on outer query
+      UNION RESULT : Result of a UNION
+      SUBQUERY : First SELECT in a Subquery
+      DEPENDENT SUBQUERY : First SELECT in a Subquery dependent on outer query
+      DERIVED : SELECT subquery in FROM clause
+      UNCACHEABLE SUBQUERY : subquery whose result cannot be cached
+  3. table :  Name of table to which row of output refers OR <unionM,N> OR <derivedN>
+  4. type : The type of join (system, const, eq_ref, ref, fulltext, ref_or_null, index_merge, unique_subquery, index_subquery, range, index, ALL)
+  5. possible_keys : Which indexes MySQL can choose from.
+  6. key : The column MySQL decided to use.
+  7. key_len : Length of the key MySQL decided to use.
+  8. ref : Which columns or constants are compared to the index named in the key column
+  9. rows : Number of rows MySQL believes it must examine to execute the query
+  10. Extra : addittional info about how MySQL resolves the query
+
+Q2.1: The value under 'rows' column in the output of EXPLAIN query and SELECT query after it are same. What does it mean?
+  It means that MySQL believes that all the rows must be scanned to execute the SELECT query in EXPLAIN.
+  
+Q2.2: Is the SELECT query optimal? If no, how do we optimize it?
+  No, the SELECT query is not optimal.
+  We can add an index to user_id to optimize it.
+
+Q3.1: We decide to index columns in comments table to optimize the SELECT query. What column(s) will you index in which order? Ask the exercise creator for a hint if you are confused.
+  We will index the columns (in order): user_id, commentable_id, commentable_type
+  Because user_id will be most selective, then commentable_id and lastly, commentable_type.
+  If commentable_id is more selective than user_id, the positions of user_id and commentable_id should be exchanged in the above order.
+
+Q4.1: EXPLAIN a SELECT query against one of your databases which employs an INNER JOIN between two tables. What does the output look like? What does the values under different columns mean? Do you get only one row in EXPLAIN's output?
+  mysql> EXPLAIN SELECT Location FROM Sandwiches JOIN Tastes USING (Filling) WHERE Name LIKE 'Jones';
+  +----+-------------+------------+-------+---------------+---------+---------+------+------+---------------------------------------------+
+  | id | select_type | table      | type  | possible_keys | key     | key_len | ref  | rows | Extra                                       |
+  +----+-------------+------------+-------+---------------+---------+---------+------+------+---------------------------------------------+
+  |  1 | SIMPLE      | Tastes     | range | PRIMARY       | PRIMARY | 32      | NULL |    1 | Using where; Using index                    |
+  |  1 | SIMPLE      | Sandwiches | index | NULL          | PRIMARY | 71      | NULL |   10 | Using where; Using index; Using join buffer |
+  +----+-------------+------------+-------+---------------+---------+---------+------+------+---------------------------------------------+
+  We get 2 rows. Both the SELECTs in the JOIN are of SIMPLE type.  
+
+Q4.2: Form the same select query in above question using a subquery instead of a JOIN. What does the EXPLAIN output look like now? Which query is better and why?
+  mysql> EXPLAIN SELECT Location FROM Sandwiches WHERE Filling IN (SELECT Filling FROM Tastes WHERE Name LIKE 'Jones');
+  +----+--------------------+------------+-------+---------------+---------+---------+------+------+--------------------------+
+  | id | select_type        | table      | type  | possible_keys | key     | key_len | ref  | rows | Extra                    |
+  +----+--------------------+------------+-------+---------------+---------+---------+------+------+--------------------------+
+  |  1 | PRIMARY            | Sandwiches | index | NULL          | PRIMARY | 71      | NULL |   10 | Using where; Using index |
+  |  2 | DEPENDENT SUBQUERY | Tastes     | range | PRIMARY       | PRIMARY | 32      | NULL |    1 | Using where; Using index |
+  +----+--------------------+------------+-------+---------------+---------+---------+------+------+--------------------------+
+  We get 2 rows. Here, we get a PRIMARY and DEPENDENT SUBQUERY for the SELECTs.
+  The first query (using JOIN) was better as, in the second one, the subquery is first computed and then the results of that query are passed on to the PRIMARY SELECT query. 
