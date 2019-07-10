@@ -1,0 +1,107 @@
+Exercise #3 Manage article and comments
+
+1: manage(create, update, delete) categories, articles, comments, and users
+-- ------------------------------------------------------------------------
+
+--
+-- Table structure for table `articles`
+--
+
+CREATE TABLE `articles` (
+  `title` varchar(255) NOT NULL,
+  `user` varchar(255) NOT NULL,
+  `category` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `articles`
+--
+
+INSERT INTO `articles` (`title`, `user`, `category`) VALUES
+('article1', 'user1', 'social'),
+('article2', 'user1', 'social'),
+('article3', 'user3', 'health'),
+('article4', 'user3', 'business');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `title` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`title`) VALUES
+('social'),
+('business'),
+('historical'),
+('health');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `comment` varchar(255) NOT NULL,
+  `article` varchar(255) NOT NULL,
+  `user` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`comment`, `article`, `user`) VALUES
+('comment1', 'article1', 'user1'),
+('comment2', 'article1', 'user3'),
+('comment3', 'article3', 'user1'),
+('comment4', 'article2', 'user3');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `name` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`name`, `type`) VALUES
+('user1', 'admin'),
+('user2', 'admin'),
+('user3', 'normal'),
+('user4', 'normal');
+
+2: select all articles whose author's name is user3 
+-- ---------------------------------------------------------------------------------------
+SELECT title FROM `articles` WHERE user = 'user3';
+
+3: For all the articles being selected above, select all the articles and also the comments associated with those articles in a single query (Do this using subquery also)
+-- --------------------------------------------------------------------------------------- 
+SELECT article,comment FROM `comments` WHERE article IN(SELECT title FROM `articles` WHERE user = 'user3');
+
+4: Write a query to select all articles which do not have any comments (Do using subquery also)
+-- ---------------------------------------------------------------------------------------
+SELECT title FROM `articles` WHERE title NOT IN ( SELECT article FROM `comments`);
+
+5: Write a query to select article which has maximum comments
+-- ---------------------------------------------------------------------------------------
+SELECT article,COUNT(comment) as total_comment FROM `comments` GROUP BY article ORDER BY total_comment DESC limit 1;
+
+6: Write a query to select article which does not have more than one comment by the same user ( do this using left join and group by )
+-- ---------------------------------------------------------------------------------------
+SELECT a.title,b.user,COUNT(b.comment) as total_comment FROM `articles` as a LEFT JOIN comments as b ON a.title = b.article GROUP BY a.title,b.user HAVING total_comment <=1
