@@ -1,0 +1,41 @@
+Create Database: CREATE DATABASE bank;
+
+Create users table
+mysql> CREATE TABLE users (
+    -> id int(10) unsigned NOT NULL AUTO_INCREMENT,
+    -> name varchar(255),
+    -> email varchar(255),
+    -> account_no varchar(15),
+    -> );
+    
+Create accounts table    
+mysql> CREATE TABLE accounts (
+    -> id int(10) unsigned NOT NULL AUTO_INCREMENT,
+    -> account_no varchar(30),
+    -> balance varchar(15),
+    -> );
+    
+
+i) userA is depositing 1000 Rs. his account
+
+START TRANSACTION;
+SELECT @ACCOUNT:=account_no FROM users WHERE name='userA';
+UPDATE accounts SET balance=(balance+1000) WHERE account_no=@ACCOUNT;
+COMMIT;    
+    
+ii) userA is withdrawing 500 Rs.
+
+START TRANSACTION;
+SELECT @ACCOUNT:=account_no FROM users WHERE name='userA';
+UPDATE accounts SET balance=(balance-500) WHERE account_no=@ACCOUNT;
+COMMIT;  
+
+iii) userA is transferring 200 Rs to userB's account
+
+START TRANSACTION;
+SELECT @FIRSTACCOUNT:=account_no FROM users WHERE name='userA';
+UPDATE accounts SET balance=(balance-200) WHERE account_no=@FIRSTACCOUNT;
+
+SELECT @SECONDACCOUNT:=account_no FROM users WHERE name='userB';
+UPDATE accounts SET balance=(balance+200) WHERE account_no=@SECONDACCOUNT;
+COMMIT;  
