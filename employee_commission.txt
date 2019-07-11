@@ -1,0 +1,121 @@
+Create Database: CREATE DATABASE employee;
+
+
+--
+-- Table structure for table `Commissions`
+--
+
+CREATE TABLE `Commissions` (
+  `id` int(11) NOT NULL,
+  `employee_id` int(11) NOT NULL,
+  `commision_amount` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `departments`
+--
+
+CREATE TABLE `departments` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `departments`
+--
+
+INSERT INTO `departments` (`id`, `name`) VALUES
+(1, 'Banking'),
+(2, 'Insurance'),
+(3, 'Services');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Employees`
+--
+
+CREATE TABLE `Employees` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `salary` int(11) NOT NULL,
+  `department_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `Commissions`
+--
+ALTER TABLE `Commissions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `employee_id` (`employee_id`);
+
+--
+-- Indexes for table `departments`
+--
+ALTER TABLE `departments`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `Employees`
+--
+ALTER TABLE `Employees`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `department` (`department_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `Commissions`
+--
+ALTER TABLE `Commissions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `departments`
+--
+ALTER TABLE `departments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `Employees`
+--
+ALTER TABLE `Employees`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `Commissions`
+--
+ALTER TABLE `Commissions`
+  ADD CONSTRAINT `Commissions_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `Employees` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `Employees`
+--
+ALTER TABLE `Employees`
+  ADD CONSTRAINT `department` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  
+  
+  
+  
+i. Find the employee who gets the highest total commission.
+SELECT employee_id,SUM(commision_amount) as total_commision  FROM `Commissions` GROUP BY employee_id ORDER BY total_commision DESC limit 1;
+
+ii. Find employee with 4th Highest salary from employee table.
+SELECT name,salary FROM `Employees`  ORDER BY salary DESC limit 3,1;
+
+iii. Find department that is giving highest commission.
+SELECT emp.department_id,SUM(commision_amount) as total_commision  FROM Commissions as com INNER JOIN  Employees as emp ON emp.id=com.employee_id GROUP BY employee_id ORDER BY total_commision DESC limit 1;
+
+iv. Find employees getting commission more than 3000
+    Display Output in following pattern:  
+      Chris Gayle, Rahul Dravid  4000  
+SELECT GROUP_CONCAT(name SEPARATOR ', ') as employees,total_commision FROM (SELECT emp.name,SUM(commision_amount) as total_commision  FROM Commissions as com INNER JOIN  Employees as emp ON emp.id=com.employee_id GROUP BY employee_id  HAVING total_commision>3000 ORDER BY total_commision DESC ) as commission GROUP BY total_commision;
