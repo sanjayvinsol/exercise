@@ -1,0 +1,22 @@
+a. The names of all salespeople that have an order with Samsonic.
+
+SELECT sp.name FROM salesperson sp JOIN orders o ON sp.id = o.salesperson_id JOIN customer c on c.id = o.cust_id WHERE c.name = 'X';
+
+b. The names of salespeople that have 2 or more orders.
+SELECT sp.Name FROM salesperson sp JOIN orders o ON sp.id = o.salesperson_id GROUP BY o.salesperson_id HAVING COUNT(*) >= 2;
+
+c. The names of salespeople that have not got any order for last one year, also show details of their last orders
+SELECT sp.Name,o.id,o.order_date FROM orders as o JOIN salesperson as  sp ON sp.id = o.salesperson_id  AND o.order_date < curdate() - interval 1 year
+
+d. Find the names of the salespeople whose order has the maximum amount as of now(Do this without using MAX Or MIN, do this using joins and consider possibility of more than one person having the highest amount)
+SELECT sp.Name,sum(o.amount) as total_order_amount FROM salesperson sp JOIN orders o ON sp.id = o.salesperson_id GROUP BY o.salesperson_id ORDER BY total_order_amount DESC limit 1
+
+e. Find the industry type all salespeople have got order from in a single column like : 
+Id Name Indsutries
+2 Panasug J,B
+and so on..(with no repetitions like J,J,B in Industries column)
+SELECT distinct sp.id,sp.name,GROUP_CONCAT(DISTINCT c.industry) FROM salesperson sp JOIN orders o ON sp.id = o.salesperson_id JOIN customer c on c.id = o.cust_id GROUP BY sp.id
+
+
+f. In the last query, get the total amount of money they have got orders for
+SELECT distinct sp.id,sp.name,GROUP_CONCAT(DISTINCT c.industry),sum(o.amount) FROM salesperson sp JOIN orders o ON sp.id = o.salesperson_id JOIN customer c on c.id = o.cust_id GROUP BY sp.id
