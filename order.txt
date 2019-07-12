@@ -1,0 +1,92 @@
+--
+-- Database: `order`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `OrderDetails`
+--
+
+CREATE TABLE `OrderDetails` (
+  `orderNumber` varchar(255) NOT NULL,
+  `quantityOrdered` int(11) NOT NULL,
+  `requiredDate` datetime NOT NULL,
+  `priceEach` int(11) NOT NULL,
+  `orderLineNumber` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `OrderDetails`
+--
+
+INSERT INTO `OrderDetails` (`orderNumber`, `quantityOrdered`, `requiredDate`, `priceEach`, `orderLineNumber`) VALUES
+('1', 2, '2019-07-04 00:00:00', '10', '1'),
+('2', 6, '2019-07-19 00:00:00', '24', '5');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Orders`
+--
+
+CREATE TABLE `Orders` (
+  `orderNumber` varchar(255) NOT NULL,
+  `orderDate` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `Orders`
+--
+
+INSERT INTO `Orders` (`orderNumber`, `orderDate`) VALUES
+('1', '2019-07-01 00:00:00'),
+('2', '2019-07-02 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `requiredDate`
+--
+
+CREATE TABLE `requiredDate` (
+  `shippedDate` datetime NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `comment` varchar(255) NOT NULL,
+  `customerNumber` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `OrderDetails`
+--
+ALTER TABLE `OrderDetails`
+  ADD KEY `ordernumber` (`orderNumber`);
+
+--
+-- Indexes for table `Orders`
+--
+ALTER TABLE `Orders`
+  ADD PRIMARY KEY (`orderNumber`);
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `OrderDetails`
+--
+ALTER TABLE `OrderDetails`
+  ADD CONSTRAINT `ordernumber` FOREIGN KEY (`orderNumber`) REFERENCES `Orders` (`orderNumber`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+a) Get all orders, number of items sold and total values in each order
+SELECT o.orderNumber,od.quantityOrdered,od.priceEach,(od.quantityOrdered*od.priceEach) as total_value FROM `Orders` as o INNER JOIN OrderDetails as od ON o.orderNumber = od.orderNumber
+
+b) what order has total value greater than $1000
+SELECT od.orderNumber FROM `OrderDetails` as od WHERE (od.quantityOrdered*od.priceEach) > 1000 
+
+c)what order has total value greater than $1000 and has more than 600 items in it
+SELECT od.orderNumber FROM `OrderDetails` as od WHERE (od.quantityOrdered*od.priceEach) > 1000 AND  quantityOrdered > 600
