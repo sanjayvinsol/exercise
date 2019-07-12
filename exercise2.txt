@@ -2,4 +2,4 @@ Exercise #2 Database user and privileges
 
 Create Database: CREATE DATABASE vtapp;
 Create User: CREATE USER 'vtapp_user'@'localhost' identified by 'vtapppassword';
-Grant Privileges: GRANT ALL PRIVILEGES ON vtapp.* to 'vtapp_user'@'%';
+Grant Privileges: GRANT ALL PRIVILEGES ON vtapp.* to 'vtapp_user'@'localhost';
