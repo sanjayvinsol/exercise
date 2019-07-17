@@ -1,6 +1,6 @@
 a. The names of all salespeople that have an order with Samsonic.
 
-SELECT sp.name FROM salesperson sp JOIN orders o ON sp.id = o.salesperson_id JOIN customer c on c.id = o.cust_id WHERE c.name = 'X';
+SELECT sp.name FROM salesperson sp JOIN orders o ON sp.id = o.salesperson_id JOIN customer c on c.id = o.cust_id WHERE c.name = 'Samsonic';
 
 b. The names of salespeople that have 2 or more orders.
 SELECT sp.Name FROM salesperson sp JOIN orders o ON sp.id = o.salesperson_id GROUP BY o.salesperson_id HAVING COUNT(*) >= 2;
