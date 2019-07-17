@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 12, 2019 at 10:50 AM
+-- Generation Time: Jul 17, 2019 at 12:24 PM
 -- Server version: 5.7.26-0ubuntu0.18.04.1
 -- PHP Version: 7.2.19-0ubuntu0.18.04.1
 
@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `OrderDetails` (
-  `orderNumber` varchar(255) NOT NULL,
+  `orderNumber` int(11) NOT NULL,
   `quantityOrdered` int(11) NOT NULL,
   `requiredDate` datetime NOT NULL,
   `priceEach` int(11) NOT NULL,
@@ -39,8 +39,8 @@ CREATE TABLE `OrderDetails` (
 --
 
 INSERT INTO `OrderDetails` (`orderNumber`, `quantityOrdered`, `requiredDate`, `priceEach`, `orderLineNumber`) VALUES
-('1', 2, '2019-07-04 00:00:00', 10, '1'),
-('2', 6, '2019-07-19 00:00:00', 24, '5');
+(1, 2, '2019-07-02 00:00:00', 10, '1'),
+(2, 6, '2019-07-19 00:00:00', 24, '5');
 
 -- --------------------------------------------------------
 
@@ -49,30 +49,22 @@ INSERT INTO `OrderDetails` (`orderNumber`, `quantityOrdered`, `requiredDate`, `p
 --
 
 CREATE TABLE `Orders` (
-  `orderNumber` varchar(255) NOT NULL,
-  `orderDate` datetime NOT NULL
+  `orderNumber` int(11) NOT NULL,
+  `orderDate` datetime NOT NULL,
+  `requiredDate` datetime DEFAULT NULL,
+  `shippedDate` datetime DEFAULT NULL,
+  `status` varchar(255) NOT NULL,
+  `comment` text NOT NULL,
+  `customerNumber` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `Orders`
 --
 
-INSERT INTO `Orders` (`orderNumber`, `orderDate`) VALUES
-('1', '2019-07-01 00:00:00'),
-('2', '2019-07-02 00:00:00');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `requiredDate`
---
-
-CREATE TABLE `requiredDate` (
-  `shippedDate` datetime NOT NULL,
-  `status` varchar(255) NOT NULL,
-  `comment` varchar(255) NOT NULL,
-  `customerNumber` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+INSERT INTO `Orders` (`orderNumber`, `orderDate`, `requiredDate`, `shippedDate`, `status`, `comment`, `customerNumber`) VALUES
+(1, '2019-07-01 00:00:00', '2019-07-01 00:00:00', '2019-07-02 00:00:00', 'completed', 'test comment', ''),
+(2, '2019-07-02 00:00:00', '2019-07-02 00:00:00', '2019-07-03 00:00:00', 'closed', 'test comment', '');
 
 --
 -- Indexes for dumped tables
@@ -82,7 +74,7 @@ CREATE TABLE `requiredDate` (
 -- Indexes for table `OrderDetails`
 --
 ALTER TABLE `OrderDetails`
-  ADD KEY `ordernumber` (`orderNumber`);
+  ADD KEY `order` (`orderNumber`);
 
 --
 -- Indexes for table `Orders`
@@ -98,7 +90,7 @@ ALTER TABLE `Orders`
 -- Constraints for table `OrderDetails`
 --
 ALTER TABLE `OrderDetails`
-  ADD CONSTRAINT `ordernumber` FOREIGN KEY (`orderNumber`) REFERENCES `Orders` (`orderNumber`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `order` FOREIGN KEY (`orderNumber`) REFERENCES `Orders` (`orderNumber`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
