@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jul 15, 2019 at 07:13 PM
+-- Generation Time: Jul 17, 2019 at 12:43 PM
 -- Server version: 5.7.26-0ubuntu0.18.04.1
 -- PHP Version: 7.2.19-0ubuntu0.18.04.1
 
@@ -28,8 +28,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `accounts` (
   `id` int(11) NOT NULL,
-  `account_no` varchar(255) NOT NULL,
-  `balance` varchar(255) NOT NULL
+  `account_no` int(11) NOT NULL,
+  `balance` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -37,8 +37,8 @@ CREATE TABLE `accounts` (
 --
 
 INSERT INTO `accounts` (`id`, `account_no`, `balance`) VALUES
-(1, '123456', '400'),
-(2, '987654', '400');
+(1, 123456, 2700),
+(2, 987654, 1600);
 
 -- --------------------------------------------------------
 
@@ -50,7 +50,7 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `account_no` varchar(255) NOT NULL
+  `account_no` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -58,8 +58,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `account_no`) VALUES
-(1, 'userA', 'usera@gmail.com', '123456'),
-(2, 'userB', 'userb@gmail.com', '987654');
+(1, 'userA', 'usera@gmail.com', 123456),
+(2, 'userB', 'userb@gmail.com', 987654);
 
 --
 -- Indexes for dumped tables
